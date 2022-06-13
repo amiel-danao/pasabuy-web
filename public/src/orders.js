@@ -120,7 +120,14 @@ function formDeserialize(form, data) {
 }
 
 function initializeOrderTable(){
+    $('#zero_config thead tr')
+    .clone(true)
+    .addClass('filters')
+    .appendTo('#zero_config thead');
+
     orderTable = $("#zero_config").DataTable({
+        fixedHeader: true,
+        initComplete: filterFunction,
         columnDefs: [
             {
                 orderable: false, targets: 0                
@@ -136,7 +143,7 @@ function initializeOrderTable(){
         columns: [
             { defaultContent: orderCheckBoxTemplate},
             { data: 'id' },
-            { data: 'date_checkout' },
+            { data: 'createdAt' },
             { 
                 data: 'state',
                 render: function(data, type) {
@@ -148,7 +155,7 @@ function initializeOrderTable(){
                     return PESO(data).format();
                 }
             },
-            { data: 'person_name' },
+            { data: 'restaurantName' },
             { defaultContent: editButtontemplate}
         ],
         createdRow: function( row, data, dataIndex ) {            
@@ -158,11 +165,20 @@ function initializeOrderTable(){
 }
 
 function attachOrderTableListener(){
-    const q = query(collection(database, "orders").withConverter(orderConverter), where("deleted", "!=", true));
+    const q = query(collection(database, "orders").withConverter(orderConverter)
+    /*, where("deleted", "!=", true)*/
+    );
+
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
-            orderTable.row.add(change.doc.data()).draw();
+            let order = change.doc.data();
+            if(order['state'] == undefined){
+                order['state'] = 0;
+            }
+
+            orderTable.row.add(order).draw();
+            console.log(order);
         }
         if (change.type === "modified") {
             console.log("Modified order: ", change.doc.data());
@@ -201,13 +217,14 @@ async function saveOrder(event) {
 }
 
 class Order {
-    constructor(id, date, state, totalPrice, customerName, deleted) {
+    constructor(id, date, state, totalPrice, restaurantName, deleted, items) {
         this.id = id;
-        this.date_checkout = date;
         this.total_price = totalPrice;
-        this.person_name = customerName;
+        this.restaurantName = restaurantName;
         this.state = state;
         this.deleted = deleted;
+        this.createdAt = date;
+        this.items = items;
     }
 };
 
@@ -218,6 +235,62 @@ const orderConverter = {
     },
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options);
-        return new Order(snapshot.id, data.date_checkout, data.state, data.total_price, data.person_name, data.deleted);
+        return new Order(snapshot.id, data.createdAt, data.state, data.total_price, 
+            data.restaurantName, data.deleted, data.items);
     }
 };
+
+function filterFunction() {
+    var api = this.api();
+
+    // For each column
+    api
+        .columns()
+        .eq(0)
+        .each(function (colIdx) {
+            if(colIdx != 0){
+                // Set the header cell to contain the input element
+                var cell = $('.filters th').eq(
+                    $(api.column(colIdx).header()).index()
+                );
+                var title = $(cell).text();
+
+                if(title != "Action"){
+                    $(cell).html('<input type="text" placeholder="' + title + '" />');
+
+                    // On every keypress in this input
+                    $(
+                        'input',
+                        $('.filters th').eq($(api.column(colIdx).header()).index())
+                    )
+                        .off('keyup change')
+                        .on('change', function (e) {
+                            // Get the search value
+                            $(this).attr('title', $(this).val());
+                            var regexr = '({search})'; //$(this).parents('th').find('select').val();
+
+                            var cursorPosition = this.selectionStart;
+                            // Search the column for that value
+                            api
+                                .column(colIdx)
+                                .search(
+                                    this.value != ''
+                                        ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                        : '',
+                                    this.value != '',
+                                    this.value == ''
+                                )
+                                .draw();
+                        })
+                        .on('keyup', function (e) {
+                            e.stopPropagation();
+
+                            $(this).trigger('change');
+                            $(this)
+                                .focus()[0]
+                                .setSelectionRange(cursorPosition, cursorPosition);
+                        });
+                }
+            }
+        });
+}

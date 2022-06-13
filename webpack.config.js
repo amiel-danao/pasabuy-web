@@ -8,7 +8,8 @@ module.exports = {
     inventory: './public/src/inventory.js',
     waves: './public/src/waves.js',
     sidebarmenu: './public/src/sidebarmenu.js',
-    custom: './public/src/custom.js'
+    custom: './public/src/custom.js',
+    dashboard: './public/src/dashboard.js'
   },
   // The location of the build folder described above
   output: {

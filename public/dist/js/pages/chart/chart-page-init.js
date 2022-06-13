@@ -4,10 +4,13 @@ $(function () {
   // ==============================================================
   // Real Time Visits
   // ==============================================================
-  var data = [5, 10, 15, 20, 15, 30, 40],
-    totalPoints = 100;
+  //var data = [5, 10, 15, 20, 15, 30, 40];
+    
+  var totalPoints = 100;
 
-  function getRandomData() {
+  var datas = [["01-2016",0],["02-2016",0],["03-2016",104],["04-2016",67]];
+
+  /*function getRandomData() {
     if (data.length > 0) data = data.slice(1);
     // Do a random walk
     while (data.length < totalPoints) {
@@ -27,6 +30,8 @@ $(function () {
     }
     return res;
   }
+  */
+
   // Set up the control widget
   var updateInterval = 1000;
   $("#updateInterval")
@@ -43,7 +48,7 @@ $(function () {
         $(this).val("" + updateInterval);
       }
     });
-  var plot = $.plot("#real-time", [getRandomData()], {
+  var plot = $.plot("#real-time", [datas], {
     series: {
       shadowSize: 1, // Drawing is faster without shadows
       lines: { fill: true, fillColor: "transparent" },
@@ -54,7 +59,12 @@ $(function () {
       show: true,
     },
     xaxis: {
-      show: false,
+      //show: false,
+      axisLabel: "Date",
+axisLabelUseCanvas: true,
+axisLabelFontSizePixels: 12,
+axisLabelFontFamily: 'Verdana, Arial',
+axisLabelPadding: 10
     },
     colors: ["#488c13"],
     grid: {
@@ -70,11 +80,11 @@ $(function () {
     },
   });
   window.onresize = function (event) {
-    $.plot($("#real-time"), [getRandomData()]);
+    $.plot($("#real-time"), [datas]);
   };
 
   function update() {
-    plot.setData([getRandomData()]);
+    plot.setData([datas]);
     // Since the axes don't change, we don't need to call plot.setupGrid()
     plot.draw();
     setTimeout(update, updateInterval);
@@ -108,6 +118,14 @@ $(function () {
         min: -1.2,
         max: 1.2,
       },
+      xaxis: {
+        show: true,
+        axisLabel: "Date",
+        axisLabelUseCanvas: true,
+        axisLabelFontSizePixels: 12,
+        axisLabelFontFamily: 'Verdana, Arial',
+        axisLabelPadding: 10
+      },
       colors: ["#ee7951", "#4fb9f0"],
       grid: {
         color: "#AFAFAF",
@@ -128,7 +146,7 @@ $(function () {
       $("#flot-line-chart"),
       [
         {
-          data: sin,
+          data: datas,
           label: "ARPU",
         }
       ],

@@ -1,16 +1,16 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, getDoc } from "firebase/firestore";
 import { Spinner } from 'spin.js';
 import moment from 'moment';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDEOzKoxLxyiUhQoNBAJXGlxBTaDs_kxO8",
-  authDomain: "cactoots-544c1.firebaseapp.com",
-  databaseURL: "https://cactoots-544c1-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "cactoots-544c1",
-  storageBucket: "cactoots-544c1.appspot.com",
-  messagingSenderId: "829920313384",
-  appId: "1:829920313384:web:a755fa3e1459c663f6751d"
+  apiKey: "AIzaSyCVCz_LymxPJGaVX_Uww9RalLQo55C_tSg",
+  authDomain: "pasabuy-8d8bf.firebaseapp.com",
+  projectId: "pasabuy-8d8bf",
+  storageBucket: "pasabuy-8d8bf.appspot.com",
+  messagingSenderId: "631663355432",
+  appId: "1:631663355432:web:434c86758f2fc9f40ab71d",
+  measurementId: "G-XDERCMHFJN"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -76,4 +76,4 @@ window.onbeforeunload = function (e) {
     return 'Sure?';
 };
 
-export { app, database, toggleLoading, dateformat, PESO, firebaseTimeStampToDateString };
+export { app, database, toggleLoading, dateformat, PESO, firebaseTimeStampToDateString, getDoc };

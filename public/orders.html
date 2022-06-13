@@ -130,6 +130,11 @@
           <nav class="sidebar-nav">
             <ul id="sidebarnav" class="pt-4">
               <li class="sidebar-item">
+                <a href="index.html" class="sidebar-link"
+                  ><i class="mdi mdi-application"></i
+                  ><span class="hide-menu"> Dashboard </span></a>
+              </li>
+              <li class="sidebar-item">
                 <a href="inventory.html" class="sidebar-link"
                   ><i class="mdi mdi-multiplication-box"></i
                   ><span class="hide-menu"> Inventory </span></a>
@@ -209,7 +214,7 @@
                           <th>Check out Date</th>
                           <th>Status</th>
                           <th>Total Price</th>
-                          <th>Customer Name</th>
+                          <th>Restaurant Name</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -224,7 +229,7 @@
                           <th>Check out Date</th>
                           <th>Status</th>
                           <th>Total Price</th>
-                          <th>Customer Name</th>
+                          <th>Restaurant Name</th>
                           <th>Action</th>
                         </tr>
                       </tfoot>
@@ -299,7 +304,7 @@
                             </label>
                             <div class="col mb-3">
                                 <p data-proxy="checkOutDate"></p>
-                                <input type="text" name="date_checkout" id="checkOutDate" class="form-control-plaintext text-monospace dateClass" readonly hidden>
+                                <input type="text" name="createdAt" id="checkOutDate" class="form-control-plaintext text-monospace dateClass" readonly hidden>
                             </div>
                         </div>
                         <div class="row">
@@ -317,10 +322,10 @@
                         </div>
                         <div class="row">
                             <label for="customerNameInput" class="text-monospace col-sm-2 col-form-label mb-3">
-                                <h4>Customer Name: </h4>
+                                <h4>Restaurant Name: </h4>
                             </label>
                             <div class="col mb-3">
-                                <input type="text" name="person_name" readonly class="form-control-plaintext text-monospace" id="customerNameInput" value="">
+                                <input type="text" name="restaurantName" readonly class="form-control-plaintext text-monospace" id="customerNameInput" value="">
                             </div>
                         </div>
                     </form>

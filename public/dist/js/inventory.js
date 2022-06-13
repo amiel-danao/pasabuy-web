@@ -49937,6 +49937,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "database": () => (/* binding */ database),
 /* harmony export */   "dateformat": () => (/* binding */ dateformat),
 /* harmony export */   "firebaseTimeStampToDateString": () => (/* binding */ firebaseTimeStampToDateString),
+/* harmony export */   "getDoc": () => (/* reexport safe */ firebase_firestore__WEBPACK_IMPORTED_MODULE_1__.getDoc),
 /* harmony export */   "toggleLoading": () => (/* binding */ toggleLoading)
 /* harmony export */ });
 /* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/index.esm.js");
@@ -49950,13 +49951,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDEOzKoxLxyiUhQoNBAJXGlxBTaDs_kxO8",
-  authDomain: "cactoots-544c1.firebaseapp.com",
-  databaseURL: "https://cactoots-544c1-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "cactoots-544c1",
-  storageBucket: "cactoots-544c1.appspot.com",
-  messagingSenderId: "829920313384",
-  appId: "1:829920313384:web:a755fa3e1459c663f6751d"
+  apiKey: "AIzaSyCVCz_LymxPJGaVX_Uww9RalLQo55C_tSg",
+  authDomain: "pasabuy-8d8bf.firebaseapp.com",
+  projectId: "pasabuy-8d8bf",
+  storageBucket: "pasabuy-8d8bf.appspot.com",
+  messagingSenderId: "631663355432",
+  appId: "1:631663355432:web:434c86758f2fc9f40ab71d",
+  measurementId: "G-XDERCMHFJN"
 };
 
 const app = (0,firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp)(firebaseConfig);
@@ -52414,7 +52415,7 @@ function convertOffset(x, y, degrees) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("469400003c91d7edd91f")
+/******/ 		__webpack_require__.h = () => ("42a176ef7280d39b68e0")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
