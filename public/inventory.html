@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>PasaBuy - Inventory</title>
+    <!-- Favicon icon -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="../assets/images/favicon.png"
+    />
+    <!-- Custom CSS -->
+    <link
+      href="../assets/libs/magnific-popup/dist/magnific-popup.css"
+      rel="stylesheet"
+    />
+    <link href="../dist/css/style.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/libs/lightbox2/dist/css/lightbox.min.css">
+  </head>
+
+  <body>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+      <div class="lds-ripple">
+        <div class="lds-pos"></div>
+        <div class="lds-pos"></div>
+      </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div
+      id="main-wrapper"
+      data-layout="vertical"
+      data-navbarbg="skin5"
+      data-sidebartype="full"
+      data-sidebar-position="absolute"
+      data-header-position="absolute"
+      data-boxed-layout="full"
+    >
+      <!-- ============================================================== -->
+      <!-- Topbar header - style you can find in pages.scss -->
+      <!-- ============================================================== -->
+      <header class="topbar" data-navbarbg="skin5">
+        <nav class="navbar top-navbar navbar-expand-md navbar-dark">
+          <div class="navbar-header" data-logobg="skin5">
+            <!-- ============================================================== -->
+            <!-- Logo -->
+            <!-- ============================================================== -->
+            <a class="navbar-brand" href="index.html">
+              <!-- Logo icon -->
+              <b class="logo-icon ps-2">
+                <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                <!-- Dark Logo icon -->
+                <img
+                  src="../assets/images/logo-icon.png"
+                  alt="homepage"
+                  class="light-logo img-fluid"
+                  width="25"
+                />
+              </b>
+              <!--End Logo icon -->
+              <!-- Logo text -->
+              <span class="logo-text ms-2">
+                <!-- dark Logo text -->
+                <img
+                  src="../assets/images/logo-text.png"
+                  alt="homepage"
+                  class="light-logo img-fluid"
+                />
+              </span>
+              <!-- Logo icon -->
+              <!-- <b class="logo-icon"> -->
+              <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+              <!-- Dark Logo icon -->
+              <!-- <img src="../assets/images/logo-text.png" alt="homepage" class="light-logo img-fluid" /> -->
+
+              <!-- </b> -->
+              <!--End Logo icon -->
+            </a>
+            <!-- ============================================================== -->
+            <!-- End Logo -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Toggle which is visible on mobile only -->
+            <!-- ============================================================== -->
+            <a
+              class="nav-toggler waves-effect waves-light d-block d-md-none"
+              href="javascript:void(0)"
+              ><i class="ti-menu ti-close"></i
+            ></a>
+          </div>
+          <!-- ============================================================== -->
+          <!-- End Logo -->
+          <!-- ============================================================== -->
+          
+        </nav>
+      </header>
+      <!-- ============================================================== -->
+      <!-- End Topbar header -->
+      <!-- ============================================================== -->
+      <!-- ============================================================== -->
+      <!-- Left Sidebar - style you can find in sidebar.scss  -->
+      <!-- ============================================================== -->
+      <aside class="left-sidebar" data-sidebarbg="skin5">
+        <!-- Sidebar scroll-->
+        <div class="scroll-sidebar">
+          <!-- Sidebar navigation-->
+          <nav class="sidebar-nav">
+            <ul id="sidebarnav" class="pt-4">
+              <li class="sidebar-item">
+                <a href="inventory.html" class="sidebar-link"
+                  ><i class="mdi mdi-multiplication-box"></i
+                  ><span class="hide-menu"> Inventory </span></a>
+              </li>
+              <li class="sidebar-item">
+                <a
+                  class="sidebar-link waves-effect waves-dark sidebar-link"
+                  href="orders.html"
+                  aria-expanded="false"
+                  ><i class="mdi mdi-border-inside"></i
+                  ><span class="hide-menu">Orders</span></a
+                >
+              </li>
+            </ul>
+          </nav>
+          <!-- End Sidebar navigation -->
+        </div>
+        <!-- End Sidebar scroll-->
+      </aside>
+      <!-- ============================================================== -->
+      <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+      <!-- ============================================================== -->
+      <!-- ============================================================== -->
+      <!-- Page wrapper  -->
+      <!-- ============================================================== -->
+      <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <div class="page-breadcrumb">
+          <div class="row">
+            <div class="col-12 d-flex no-block align-items-center">
+              <h4 class="page-title">Inventory</h4>
+              <div class="ms-auto text-end">
+                <nav aria-label="breadcrumb">
+                  <button type="button" id="newItemButton" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editItemModal">New</button>
+                  <!-- <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Library
+                    </li>
+                  </ol> -->
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+          <!-- ============================================================== -->
+          <!-- Start Page Content -->
+          <!-- ============================================================== -->
+          <div id="itemThumbnailTable" class="row el-element-overlay">
+
+          </div>
+          <!-- ============================================================== -->
+          <!-- End PAge Content -->
+          <!-- ============================================================== -->
+          <!-- ============================================================== -->
+          <!-- Right sidebar -->
+          <!-- ============================================================== -->
+          <!-- .right-sidebar -->
+          <!-- ============================================================== -->
+          <!-- End Right sidebar -->
+          <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+        <footer class="footer text-center">
+          All Rights Reserved 2022
+        </footer>
+        <!-- ============================================================== -->
+        <!-- End footer -->
+        <!-- ============================================================== -->
+      </div>
+      <!-- ============================================================== -->
+      <!-- End Page wrapper  -->
+      <!-- ============================================================== -->
+    </div>
+
+
+    <div id="editItemModal" class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" >Edit Item Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+              <div class="modal-body">
+                  <form id="editItemForm">
+                      <div class="row">
+                          <label for="itemId" class="text-monospace col-sm-2 col-form-label mb-3">
+                              <h4>Item Id: </h4>
+                          </label>
+                          <div class="col mb-3">
+                              <input type="text" name="id" readonly class="form-control-plaintext text-monospace" id="itemId" value="" required>
+                          </div>
+                      </div>
+                      <div class="row">
+                        <label for="name" class="text-monospace col-sm-2 col-form-label mb-3">
+                            <h4>Item Name: </h4>
+                        </label>
+                        <div class="col mb-3">
+                            <input type="text" name="name" class="text-monospace" id="name" value="" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                    
+                      <table id="itemEditTable" class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Variation</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Delete</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+
+                      <button id="addNewVariationButton" type="button" class="list-group-item list-group-item-action btn btn-success"><i class="fa-solid fa-plus">Add new variation</i></button>
+                    </div>
+                      <!--<div class="row">
+                          <label for="priceInput" class="text-monospace col-sm-2 col-form-label mb-3">
+                              <h4>Price: </h4>
+                          </label>
+                          <div class="col mb-3">                              
+                              <input type="number" min="0" name="price" class="text-monospace currency" id="priceInput" data-type="int" value="" required>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <label for="quantity" class="text-monospace col-sm-2 col-form-label mb-3 date">
+                              <h4> Quantity: </h4>
+                          </label>
+                          <div class="col mb-3">
+                              <input type="number" min="0" name="quantity" id="quantity" class="text-monospace" data-type="int" required>
+                          </div>
+                      </div>
+                      
+                        <div class="row">
+                          <label for="size" class="text-monospace col-sm-2 col-form-label mb-3">
+                              <h4>Size:</h4>
+                          </label>
+                          <div class="col mb-3">
+                              <select id="size" name="size" class="form-select form-select-lg mb-3" aria-label=".form-select-lg">
+                                  <option value=""></option>  
+                                  <option value="s">S</option>
+                                  <option value="m">M</option>
+                                  <option value="l">L</option>
+                                  <option value="xl">XL</option>
+                                  <option value="xxl">XXL</option>
+                              </select>
+                          </div>
+                      </div>
+                      -->
+                  </form>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" form="editItemForm">Update</button>
+              </div>
+          </div>
+      </div>
+      
+  </div>
+
+
+  <div id="manageImageModal" class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" >Item Image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+            <div class="modal-body">
+
+              <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                  
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+
+                <form id="editImageForm">
+                    <div class="row">
+                      <div class="input-group mb-3">
+                        <input type="file" class="form-control" id="uploadItemImage" accept="image/png, image/gif, image/jpeg" multiple>
+                        <label class="input-group-text" for="uploadItemImage">Upload Image</label>
+                      </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary" form="editImageForm">Update</button>
+            </div>
+        </div>
+    </div>
+    
+</div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+	<script src="https://kit.fontawesome.com/14144b74ca.js" crossorigin="anonymous"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/libs/lightbox2/dist/js/lightbox.min.js"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="../assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="../assets/extra-libs/sparkline/sparkline.js"></script>
+    <!--Wave Effects -->
+    <script src="../dist/js/waves.js"></script>
+    <!--Menu sidebar -->
+    <script src="../dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="../dist/js/custom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js" integrity="sha512-RdSPYh1WA6BF0RhpisYJVYkOyTzK4HwofJ3Q7ivt/jkpW6Vc8AurL1R+4AUcvn9IwEKAPm/fk7qFZW3OuiUDeg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="module" src="../dist/js/currency.min.js"></script>
+    <script type="module" src="../dist/js/index.js"></script>
+    <script type="module" src="../dist/js/inventory.js"></script>
+    <!-- this page js -->
+    <script src="../assets/libs/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
+    <script src="../assets/libs/magnific-popup/meg.init.js"></script>
+  </body>
+</html>
