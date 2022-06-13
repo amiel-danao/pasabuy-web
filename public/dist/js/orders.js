@@ -46636,12 +46636,10 @@ async function saveOrder(event) {
 }
 
 class Order {
-    constructor(id, date, state, totalPrice, restaurantName, deleted, items) {
+    constructor(id, date, state, restaurantName, items) {
         this.id = id;
-        this.total_price = totalPrice;
         this.restaurantName = restaurantName;
         this.state = state;
-        this.deleted = deleted;
         this.createdAt = date;
         this.items = items;
     }
@@ -46654,8 +46652,8 @@ const orderConverter = {
     },
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options);
-        return new Order(snapshot.id, data.createdAt, data.state, data.total_price, 
-            data.restaurantName, data.deleted, data.items);
+        return new Order(snapshot.id, data.createdAt, data.state,  
+            data.restaurantName, data.items);
     }
 };
 
@@ -48638,7 +48636,7 @@ function convertOffset(x, y, degrees) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("42a176ef7280d39b68e0")
+/******/ 		__webpack_require__.h = () => ("806e96b525ac206e991f")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

@@ -217,12 +217,10 @@ async function saveOrder(event) {
 }
 
 class Order {
-    constructor(id, date, state, totalPrice, restaurantName, deleted, items) {
+    constructor(id, date, state, restaurantName, items) {
         this.id = id;
-        this.total_price = totalPrice;
         this.restaurantName = restaurantName;
         this.state = state;
-        this.deleted = deleted;
         this.createdAt = date;
         this.items = items;
     }
@@ -235,8 +233,8 @@ const orderConverter = {
     },
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options);
-        return new Order(snapshot.id, data.createdAt, data.state, data.total_price, 
-            data.restaurantName, data.deleted, data.items);
+        return new Order(snapshot.id, data.createdAt, data.state,  
+            data.restaurantName, data.items);
     }
 };
 
