@@ -1,10 +1,11 @@
 'use strict';
 import { database, toggleLoading, dateformat, PESO, firebaseTimeStampToDateString } from './index.js';
-import { writeBatch, collection, query, where, onSnapshot, setDoc, doc } from "firebase/firestore";
+import { writeBatch, collection, query, where, onSnapshot, setDoc, doc, updateDoc, increment } from "firebase/firestore";
 
 var orderTable;
 const stateColors = ["badge bg-info", "badge bg-primary", "badge bg-warning", "badge bg-success"];
 const stateTexts = ["Pending", "Processing", "On Delivery", "Received"];
+const stateVariables = ["pendingOrders", "processingOrders", "onDeliveryOrders", "receivedOrders"];
 const orderCheckBoxTemplate = '<label class="customcheckbox"><input type="checkbox" class="listCheckbox" /><span class="checkmark"></span></label>';
 const editButtontemplate = `<button type="button" class="btn btn-info editOrderButton" data-bs-toggle="modal" data-bs-target="#editOrderModal">Edit <i class="fas fa-edit"></i></button>
                             <button type="button" class="btn btn-danger deleteOrderButton" >Delete<i class="fas fa-close" aria-hidden="true"></i></button>`;
@@ -207,13 +208,28 @@ async function saveOrder(event) {
     await setDoc(doc(database, "orders", orderId), Object.assign({}, updatedOrder))
     .then(function() {
         console.log("Order was updated successfully!");
-        $('#editOrderModal').modal('hide');
+        $('#editOrderModal').modal('hide');        
         toggleLoading('', false);
+
+        if(selectedOrder.state != updatedOrder.state){
+            updateOrderStateCounter(selectedOrder.state, updatedOrder.state);
+        }
     })
     .catch(error => {
         toggleLoading('', false);
         bootbox.alert(error);
     });
+}
+
+function updateOrderStateCounter(previousStateIndex, currentStateIndex){
+    const ref = doc(db, "settings", "counters");
+    let previousState = stateVariables[previousStateIndex];
+    let currentState = stateVariables[currentStateIndex];
+    let updateCounter = {};
+    updateCounter[previousState] = increment(-1);
+    updateCounter[currentState] = increment(1);
+
+    await updateDoc(ref, updateCounter);
 }
 
 class Order {

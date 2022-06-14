@@ -4,7 +4,7 @@ import { collection, query, onSnapshot, getDocs, setDoc, doc, Timestamp} from "f
 import {Chart, registerables } from 'chart.js';
 import moment from 'moment';
 
-const counterIds = ['totalOrders', 'pendingOrders', 'totalShops'];
+const counterIds = ['pendingOrders', 'processingOrders', 'onDeliveryOrders', 'receivedOrders', 'totalShops'];
 const labels = [
     'January',
     'February',
@@ -87,12 +87,27 @@ async function attachSettingsListener(){
         for(var i=0; i < counterIds.length; i++){
             let key = counterIds[i];
             if(data[key] != undefined){
-                document.getElementById(key).innerText = data[key];
+				let dom = document.getElementById(key);
+                if(dom != undefined){
+					dom.innerText = data[key];
+				}
             }
         }
         
+		refreshTotalOrders();
     } else {
     // doc.data() will be undefined in this case
         console.log("No such document!");
     }
+}
+
+function refreshTotalOrders(){
+	let total = 0;
+	$('.orderState').each(function( index ) {
+		let parsed = parseInt($(this).text());
+		if (isNaN(parsed)) { continue; }
+		total += parsed;
+	});
+
+	$('#totalOrders').text(totalOrders);
 }
