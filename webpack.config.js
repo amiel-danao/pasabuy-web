@@ -9,7 +9,8 @@ module.exports = {
     waves: './public/src/waves.js',
     sidebarmenu: './public/src/sidebarmenu.js',
     custom: './public/src/custom.js',
-    dashboard: './public/src/dashboard.js'
+    dashboard: './public/src/dashboard.js',
+    login: './public/src/login.js'
   },
   // The location of the build folder described above
   output: {
@@ -17,6 +18,7 @@ module.exports = {
     filename: '[name].js',
     hotUpdateChunkFilename: 'hot/[runtime]-[name]-hot-update.js',
     hotUpdateMainFilename: 'hot/[runtime]-hot-update.json'
+    //publicPath: '',
   },
   // Optional and for development only. This provides the ability to
   // map the built code back to the original source format when debugging.

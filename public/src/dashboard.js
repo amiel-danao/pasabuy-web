@@ -1,5 +1,5 @@
 'use strict';
-import { database, getDoc} from './index.js';
+import { database, getDoc, logout, checkCredential} from './index.js';
 import { collection, query, onSnapshot, getDocs, setDoc, doc, Timestamp} from "firebase/firestore";
 import {Chart, registerables } from 'chart.js';
 import moment from 'moment';
@@ -27,15 +27,19 @@ const labels = [
     options: {}
   };
 
+  checkCredential();
 
 $(function(){
     console.log('start dashboard');
     Chart.register(...registerables);
-    
+    attachEventListeners();    
     readStatsFromDatabase();
     attachSettingsListener();
 });
 
+function attachEventListeners(){
+    $("#logout").on('click', logout);
+}
 
 async function readStatsFromDatabase(){
 
@@ -105,9 +109,10 @@ function refreshTotalOrders(){
 	let total = 0;
 	$('.orderState').each(function( index ) {
 		let parsed = parseInt($(this).text());
-		if (isNaN(parsed)) { continue; }
-		total += parsed;
+		if (!isNaN(parsed)) { 
+		    total += parsed;
+        }
 	});
 
-	$('#totalOrders').text(totalOrders);
+	$('#totalOrders').text(total);
 }

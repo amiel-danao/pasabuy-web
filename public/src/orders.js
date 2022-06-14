@@ -1,5 +1,5 @@
 'use strict';
-import { database, toggleLoading, dateformat, PESO, firebaseTimeStampToDateString } from './index.js';
+import { database, toggleLoading, dateformat, PESO, firebaseTimeStampToDateString, logout, checkCredential } from './index.js';
 import { writeBatch, collection, query, where, onSnapshot, setDoc, doc, updateDoc, increment } from "firebase/firestore";
 
 var orderTable;
@@ -12,6 +12,8 @@ const editButtontemplate = `<button type="button" class="btn btn-info editOrderB
 var selectedOrder;
 var updatedOrder;
 
+checkCredential();
+
 $(function(){
     initializeOrderTable();
     attachEventListeners();    
@@ -20,11 +22,12 @@ $(function(){
 
 function attachEventListeners(){
     const form = document.getElementById('editOrderForm');
+    $("#logout").on('click', logout);
     form.addEventListener('submit', saveOrder);
     $("#zero_config tbody").on("click", ".editOrderButton", function(){
         let data = orderTable.row(this.parentNode).data();
         selectedOrder = data;
-        updatedOrder = selectedOrder;
+        updatedOrder = Object.assign({}, selectedOrder);
         console.log(selectedOrder);
     });
     
@@ -202,6 +205,7 @@ function attachCheckBoxListener(){
 async function saveOrder(event) {
     event.preventDefault();
     toggleLoading('Saving order...', true);
+    console.log(selectedOrder);
     console.log(updatedOrder);
 
     let orderId = $("#orderId").val();
@@ -221,8 +225,8 @@ async function saveOrder(event) {
     });
 }
 
-function updateOrderStateCounter(previousStateIndex, currentStateIndex){
-    const ref = doc(db, "settings", "counters");
+async function updateOrderStateCounter(previousStateIndex, currentStateIndex){
+    const ref = doc(database, "settings", "counters");
     let previousState = stateVariables[previousStateIndex];
     let currentState = stateVariables[currentStateIndex];
     let updateCounter = {};
@@ -283,7 +287,7 @@ function filterFunction() {
                             $(this).attr('title', $(this).val());
                             var regexr = '({search})'; //$(this).parents('th').find('select').val();
 
-                            var cursorPosition = this.selectionStart;
+                            
                             // Search the column for that value
                             api
                                 .column(colIdx)
@@ -299,6 +303,8 @@ function filterFunction() {
                         .on('keyup', function (e) {
                             e.stopPropagation();
 
+                            var cursorPosition = this.selectionStart;
+
                             $(this).trigger('change');
                             $(this)
                                 .focus()[0]
@@ -308,3 +314,15 @@ function filterFunction() {
             }
         });
 }
+
+window.onbeforeunload = function (e) {
+    e = e || window.event;
+
+    // For IE and Firefox prior to version 4
+    if (e) {
+        e.returnValue = 'Sure?';
+    }
+
+    // For Safari
+    return 'Sure?';
+};

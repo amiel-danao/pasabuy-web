@@ -5,22 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="keywords"
-      content="wrappixel, admin dashboard, html css dashboard, web dashboard, bootstrap 5 admin, bootstrap 5, css3 dashboard, bootstrap 5 dashboard, Matrix lite admin bootstrap 5 dashboard, frontend, responsive bootstrap 5 admin template, Matrix admin lite design, Matrix admin lite dashboard bootstrap 5 dashboard template"
-    />
-    <meta
-      name="description"
-      content="Matrix Admin Lite Free Version is powerful and clean admin dashboard template, inpired from Bootstrap Framework"
-    />
     <meta name="robots" content="noindex,nofollow" />
-    <title>Matrix Admin Lite Free Versions Template by WrapPixel</title>
+    <title>PasaBuy - Login</title>
     <!-- Favicon icon -->
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="../assets/images/favicon.png"
+      href="../assets/images/favicon.ico"
     />
     <!-- Custom CSS -->
     <link href="../dist/css/style.min.css" rel="stylesheet" />
@@ -32,7 +24,7 @@
     <![endif]-->
   </head>
 
-  <body>
+  <body class="d-flex flex-column min-vh-100">
     <div class="main-wrapper">
       <!-- ============================================================== -->
       <!-- Preloader - style you can find in spinners.css -->
@@ -57,20 +49,21 @@
           justify-content-center
           align-items-center
           bg-dark
+          
         "
       >
-        <div class="auth-box bg-dark border-top border-secondary">
+        <div class="auth-box bg-dark border-top border-secondary mb-4">
           <div id="loginform">
             <div class="text-center pt-3 pb-3">
               <span class="db"
                 ><img src="../assets/images/logo.png" alt="logo"
+                style="max-width: 30%;"
               /></span>
             </div>
             <!-- Form -->
             <form
               class="form-horizontal mt-3"
               id="loginform"
-              action="index.html"
             >
               <div class="row pb-4">
                 <div class="col-12">
@@ -79,16 +72,17 @@
                       <span
                         class="input-group-text bg-success text-white h-100"
                         id="basic-addon1"
-                        ><i class="mdi mdi-account fs-4"></i
+                        ><i class="mdi mdi-email fs-4"></i
                       ></span>
                     </div>
                     <input
+                      id="emailInput"
                       type="text"
                       class="form-control form-control-lg"
-                      placeholder="Username"
+                      placeholder="Email"
                       aria-label="Username"
                       aria-describedby="basic-addon1"
-                      required=""
+                      required="true"
                     />
                   </div>
                   <div class="input-group mb-3">
@@ -100,12 +94,13 @@
                       ></span>
                     </div>
                     <input
-                      type="text"
+                      id="passwordInput"
+                      type="password"
                       class="form-control form-control-lg"
                       placeholder="Password"
                       aria-label="Password"
                       aria-describedby="basic-addon1"
-                      required=""
+                      required="true"
                     />
                   </div>
                 </div>
@@ -114,17 +109,14 @@
                 <div class="col-12">
                   <div class="form-group">
                     <div class="pt-3">
-                      <button
+                      <!-- <button
                         class="btn btn-info"
                         id="to-recover"
                         type="button"
                       >
                         <i class="mdi mdi-lock fs-4 me-1"></i> Lost password?
-                      </button>
-                      <button
-                        class="btn btn-success float-end text-white"
-                        type="submit"
-                      >
+                      </button> -->
+                      <button class="btn btn-success float-end text-white" type="submit">
                         Login
                       </button>
                     </div>
@@ -133,7 +125,7 @@
               </div>
             </form>
           </div>
-          <div id="recoverform">
+          <!-- <div id="recoverform">
             <div class="text-center">
               <span class="text-white"
                 >Enter your e-mail address below and we will send you
@@ -141,9 +133,7 @@
               >
             </div>
             <div class="row mt-3">
-              <!-- Form -->
               <form class="col-12" action="index.html">
-                <!-- email -->
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span
@@ -156,11 +146,10 @@
                     type="text"
                     class="form-control form-control-lg"
                     placeholder="Email Address"
-                    aria-label="Username"
+                    aria-label="Email"
                     aria-describedby="basic-addon1"
                   />
                 </div>
-                <!-- pwd -->
                 <div class="row mt-3 pt-3 border-top border-secondary">
                   <div class="col-12">
                     <a
@@ -181,7 +170,7 @@
                 </div>
               </form>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
       <!-- ============================================================== -->
@@ -190,6 +179,7 @@
       <!-- ============================================================== -->
       <!-- Page wrapper scss in scafholding.scss -->
       <!-- ============================================================== -->
+      
       <!-- ============================================================== -->
       <!-- Page wrapper scss in scafholding.scss -->
       <!-- ============================================================== -->
@@ -200,28 +190,37 @@
       <!-- Right Sidebar -->
       <!-- ============================================================== -->
     </div>
+
+    <footer class="footer text-center mt-auto">
+      All Rights Reserved 2022
+    </footer>
     <!-- ============================================================== -->
     <!-- All Required js -->
     <!-- ============================================================== -->
     <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
-    <!-- Bootstrap tether Core JavaScript -->
-    <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- ============================================================== -->
-    <!-- This page plugin js -->
-    <!-- ============================================================== -->
+
     <script>
       $(".preloader").fadeOut();
       // ==============================================================
       // Login and Recover Password
       // ==============================================================
-      $("#to-recover").on("click", function () {
-        $("#loginform").slideUp();
-        $("#recoverform").fadeIn();
-      });
-      $("#to-login").click(function () {
-        $("#recoverform").hide();
-        $("#loginform").fadeIn();
-      });
+      // $("#to-recover").on("click", function () {
+      //   $("#loginform").slideUp();
+      //   $("#recoverform").fadeIn();
+      // });
+      // $("#to-login").click(function () {
+      //   $("#recoverform").hide();
+      //   $("#loginform").fadeIn();
+      // });
     </script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js" integrity="sha512-RdSPYh1WA6BF0RhpisYJVYkOyTzK4HwofJ3Q7ivt/jkpW6Vc8AurL1R+4AUcvn9IwEKAPm/fk7qFZW3OuiUDeg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="module" src="../dist/js/index.js"></script>
+    <script type="module" src="../dist/js/login.js"></script>
+    <!-- ============================================================== -->
+    <!-- This page plugin js -->
+    <!-- ============================================================== -->
+    
   </body>
 </html>

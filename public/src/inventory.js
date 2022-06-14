@@ -1,9 +1,13 @@
 'use strict';
-import { database, toggleLoading, dateformat, PESO, firebaseTimeStampToDateString } from './index.js';
+import { database, toggleLoading, dateformat, PESO, firebaseTimeStampToDateString, logout, checkCredential } from './index.js';
 import { collection, query, where, onSnapshot, setDoc, doc, Timestamp} from "firebase/firestore";
 import { getStorage, ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 
+const editButtontemplate = `<button type="button" class="btn btn-info imageEdit image-popup-vertical-fit el-link" href="javascript:void(0);"
+data-bs-toggle="modal" data-bs-target="#manageImageModal"><i class="fas fa-images"></i></button>
+                            <button type="button" class="btn btn-danger itemEdit"  href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#editItemModal">Edit<i class="fas fa-edit" aria-hidden="true"></i></button>`;
 const defaultNoImage = `https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2000px-No_image_available.svg.png`;
+const orderCheckBoxTemplate = '<label class="customcheckbox"><input type="checkbox" class="listCheckbox" /><span class="checkmark"></span></label>';
 const storage = getStorage();
 var modalDialogTrigger;
 var uploadItemImage;
@@ -11,14 +15,68 @@ var selectedItem;
 var updatedItem;
 var itemImages = {};
 var itemRefs = {};
+var itemTable;
+
+checkCredential();
 
 $(function(){
-    attachEventListeners();
-    attachOrderTableListener();
+    initializeItemTable();
+    attachEventListeners();    
+    attachItemTableListener();
 });
 
 
+function initializeItemTable(){
+    $('#itemTable thead tr')
+    .clone(true)
+    .addClass('filters')
+    .appendTo('#itemTable thead');
+
+    itemTable = $("#itemTable").DataTable({
+        fixedHeader: true,
+        initComplete: filterFunction,
+        columnDefs: [
+            {
+                orderable: false, targets: 0                
+            },
+            {
+                render: function ( data, type, row ) {
+                    let obj = row;
+                    return getPricesTextTemplate(obj);
+                },
+                targets: 3
+            },
+            {
+                render: function ( data, type, row ) {
+                    let obj = row;
+                    console.log(row);
+                    return getQuantityTextTemplate(obj);
+                },
+                targets: 4
+            }
+            
+        ],
+        order: [[1, 'asc']],
+        columns: [
+            { defaultContent: orderCheckBoxTemplate},
+            { data: 'id' },
+            { data: 'name' },
+            { data: 'price'},
+            { 
+                data: 'quantity'
+            },            
+            { data: 'restaurantName' },
+            { defaultContent: editButtontemplate}
+        ],
+        createdRow: function( row, data, dataIndex ) {            
+            row.id = data.id;
+        }
+    });
+}
+
 function attachEventListeners(){
+    $("#logout").on('click', logout);
+
     uploadItemImage = document.getElementById("uploadItemImage");
 
     const form = document.getElementById('editItemForm');
@@ -33,13 +91,16 @@ function attachEventListeners(){
 
         if(modalDialogTrigger.hasClass('itemEdit')){
             $(this).find(".modal-title").text("Edit item details");
-            selectedItem = modalDialogTrigger.parents('.item-entry').data('item');
+            console.log(modalDialogTrigger.parents('tr'));
+            selectedItem = itemTable.row( modalDialogTrigger.parents('tr') ).data();
+            console.log(selectedItem);
+            
         }
         else{
             let ref = doc(collection(database, "items"));
             let id = ref.id;
             console.log(id);
-            selectedItem = new Item(id, "", {}, {}, Timestamp.now());
+            selectedItem = new Item(id, "", "", {}, {}, Timestamp.now());
             $(this).find(".modal-title").text("Add new item");
             $('#editItemForm').get(0).reset();
         }
@@ -82,8 +143,8 @@ function attachEventListeners(){
 
     });
 
-    $("#itemThumbnailTable").on('click', ".imageEdit", function(){
-        selectedItem = $(this).parents('.item-entry').data('item');
+    $("table").on('click', ".imageEdit", function(){
+        selectedItem = itemTable.row( $(this).parents('tr') ).data();
         console.log(selectedItem);
     });
 
@@ -92,7 +153,7 @@ function attachEventListeners(){
     });
 
     
-    $("#itemThumbnailTable").on('click', '.itemEdit', function(){
+    $("table").on('click', '.itemEdit', function(){
         modalDialogTrigger = $(this);
     });	
 	
@@ -229,9 +290,9 @@ function updateImagesUI(itemId){
             .then((url) => {
             // Insert url into an <img> tag to "download"
                 itemImages[itemId].push(url);
-                if(itemImages[itemId].length == 1){
-                    $(`#${itemId}`).find(".thumbnailImage").attr('src', url);
-                }
+                // if(itemImages[itemId].length == 1){
+                //     $(`#${itemId}`).find(".thumbnailImage").attr('src', url);
+                // }
             })
             .catch((error) => {
             // A full list of error codes is available at
@@ -264,31 +325,47 @@ function updateImagesUI(itemId){
     });
 }
 
-function attachOrderTableListener(){
+function attachItemTableListener(){
     
     const q = query(collection(database, "items").withConverter(itemConverter)/*, where("state", "==", "CA")*/);
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
-            //orderTable.row.add(change.doc.data()).draw();
-            let newData = change.doc.data();
-            let newElem = getItemTemplate(newData);            
-            $("#itemThumbnailTable").append(newElem);
-            $(`#${change.doc.id}`).data('item', newData);
+        // if (change.type === "added") {
+        //     //itemTable.row.add(change.doc.data()).draw();
+        //     let newData = change.doc.data();
+        //     let newElem = getItemTemplate(newData);            
+        //     $("#itemThumbnailTable").append(newElem);
+        //     $(`#${change.doc.id}`).data('item', newData);
 
-            updateImagesUI(change.doc.id);
+        //     updateImagesUI(change.doc.id);
+        // }
+        // if (change.type === "modified") {
+        //     console.log("Modified order: ", change.doc.data());
+        //     let id = change.doc.id;
+
+        //     $(`#${id}`).find('.prices').html(getPricesTextTemplate(change.doc.data()));
+        //     $(`#${id}`).find('.quantity').text(getQuantityTextTemplate(change.doc.data()));
+        // }
+        // if (change.type === "removed") {
+        //     console.log("Removed order: ", change.doc.data());
+        //     $(`#${change.doc.id}`).remove();
+        // }
+
+        if (change.type === "added") {
+            itemTable.row.add(change.doc.data()).draw();
+
+            updateImagesUI(change.doc.id)
         }
         if (change.type === "modified") {
             console.log("Modified order: ", change.doc.data());
-            let id = change.doc.id;
-
-            $(`#${id}`).find('.prices').html(getPricesTextTemplate(change.doc.data()));
-            $(`#${id}`).find('.quantity').text(getQuantityTextTemplate(change.doc.data()));
+            itemTable.row('#'+change.doc.id).data( change.doc.data() ).draw();
         }
         if (change.type === "removed") {
             console.log("Removed order: ", change.doc.data());
-            $(`#${change.doc.id}`).remove();
+            itemTable.row(`#${change.doc.id}`).remove().draw();
         }
+
+
       });
     });
 }
@@ -430,9 +507,10 @@ async function saveItem(event) {
 }
 
 class Item {
-    constructor(id, name, price, quantity, timestamp) {
+    constructor(id, name, restaurantName, price, quantity, timestamp) {
         this.id = id;
         this.name = name;
+        this.restaurantName = restaurantName;
         this.price = price;
         this.quantity = quantity;
         this.timestamp = timestamp;
@@ -446,6 +524,63 @@ const itemConverter = {
     },
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options);
-        return new Item(snapshot.id, data.name, data.price, data.quantity, data.timestamp);
+        return new Item(snapshot.id, data.name, data.restaurantName, data.price, data.quantity, data.timestamp);
     }
 };
+
+function filterFunction() {
+    var api = this.api();
+
+    // For each column
+    api
+        .columns()
+        .eq(0)
+        .each(function (colIdx) {
+            if(colIdx != 0){
+                // Set the header cell to contain the input element
+                var cell = $('.filters th').eq(
+                    $(api.column(colIdx).header()).index()
+                );
+                var title = $(cell).text();
+
+                if(title != "Action"){
+                    $(cell).html('<input type="text" placeholder="' + title + '" />');
+
+                    // On every keypress in this input
+                    $(
+                        'input',
+                        $('.filters th').eq($(api.column(colIdx).header()).index())
+                    )
+                        .off('keyup change')
+                        .on('change', function (e) {
+                            // Get the search value
+                            $(this).attr('title', $(this).val());
+                            var regexr = '({search})'; //$(this).parents('th').find('select').val();
+
+                            
+                            // Search the column for that value
+                            api
+                                .column(colIdx)
+                                .search(
+                                    this.value != ''
+                                        ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                        : '',
+                                    this.value != '',
+                                    this.value == ''
+                                )
+                                .draw();
+                        })
+                        .on('keyup', function (e) {
+                            e.stopPropagation();
+
+                            var cursorPosition = this.selectionStart;
+
+                            $(this).trigger('change');
+                            $(this)
+                                .focus()[0]
+                                .setSelectionRange(cursorPosition, cursorPosition);
+                        });
+                }
+            }
+        });
+}

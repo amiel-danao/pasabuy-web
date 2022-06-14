@@ -1,6 +1,6 @@
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
 import { getFirestore, getDoc } from "firebase/firestore";
-import { Spinner } from 'spin.js';
 import moment from 'moment';
 
 const firebaseConfig = {
@@ -17,6 +17,7 @@ const app = initializeApp(firebaseConfig);
 const database = getFirestore();
 const dateformat = 'MM/DD/YYYY hh:mm:ss';
 const PESO = value => currency(value, { symbol: '₱', precision: 1, decimal: '.', separator: ',' });
+const auth = getAuth();
 var loadingDialog;
 
 var opts = {
@@ -64,16 +65,29 @@ function firebaseTimeStampToDateString(timestamp){
   return m.format(dateformat);
 }
 
-window.onbeforeunload = function (e) {
-    e = e || window.event;
+function logout(){
+	signOut(auth);
+}
 
-    // For IE and Firefox prior to version 4
-    if (e) {
-        e.returnValue = 'Sure?';
-    }
+function checkCredential(){
+	onAuthStateChanged(auth, (user) => {
+		if (user) {
+		// User is signed in, see docs for a list of available properties
+		// https://firebase.google.com/docs/reference/js/firebase.User
+			
+			if(window.location.pathname == "/login.html"){
+				window.location.replace("index.html");
+			}
+		// ...
+		} else {
+		// User is signed out
+		// ...
+			if(window.location.pathname != "/login.html"){
+				window.location.replace("login.html");
+			}
+		}
+	});
+}
 
-    // For Safari
-    return 'Sure?';
-};
 
-export { app, database, toggleLoading, dateformat, PESO, firebaseTimeStampToDateString, getDoc };
+export { app, database, toggleLoading, dateformat, PESO, firebaseTimeStampToDateString, getDoc, logout, checkCredential };
