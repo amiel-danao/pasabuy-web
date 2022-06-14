@@ -1,7 +1,8 @@
 'use strict';
 import { database, getDoc} from './index.js';
-import { collection, query, where, onSnapshot, setDoc, doc, Timestamp} from "firebase/firestore";
+import { collection, query, onSnapshot, getDocs, setDoc, doc, Timestamp} from "firebase/firestore";
 import {Chart, registerables } from 'chart.js';
+import moment from 'moment';
 
 const counterIds = ['totalOrders', 'pendingOrders', 'totalShops'];
 const labels = [
@@ -19,19 +20,10 @@ const labels = [
     'December',
   ];
 
-  const data = {
-    labels: labels,
-    datasets: [{
-      label: 'Orders',
-      backgroundColor: '#3ef57f',
-      borderColor: '#3ef57f',
-      data: [5, 10, 5, 2, 20, 30, 0, 0, 0, 0, 0, 0],
-    }]
-  };
 
   const config = {
     type: 'line',
-    data: data,
+    data: {},
     options: {}
   };
 
@@ -39,13 +31,50 @@ const labels = [
 $(function(){
     console.log('start dashboard');
     Chart.register(...registerables);
-    const myChart = new Chart(
-        document.getElementById('myChart'),
-        config
-      );
+    
+    readStatsFromDatabase();
     attachSettingsListener();
 });
 
+
+async function readStatsFromDatabase(){
+
+	var orderMonths = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+	const q = query(collection(database, "orders"));
+
+	const querySnapshot = await getDocs(q);
+	querySnapshot.forEach((doc) => {
+		// doc.data() is never undefined for query doc snapshots
+		let order = doc.data();
+
+		if(order['createdAt'] != undefined){
+			console.log(doc.id, " => ", order);
+
+			let date = order['createdAt'].toDate();
+			let monthIndex = moment(date).month();
+
+			orderMonths[monthIndex]++;
+		}
+	});
+
+	const data = {
+		labels: labels,
+		datasets: [{
+			label: 'Orders',
+			backgroundColor: '#3ef57f',
+			borderColor: '#3ef57f',
+			data: orderMonths,
+		}]
+	};
+
+	config.data = data;
+
+	const myChart = new Chart(
+		document.getElementById('myChart'),
+		config
+	);
+}
 
 async function attachSettingsListener(){
     const docRef = doc(database, "settings", "counters");
