@@ -56359,14 +56359,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var orderTable;
-const stateColors = ["badge bg-info", "badge bg-primary", "badge bg-warning", "badge bg-success"];
-const stateTexts = ["Pending", "Processing", "On Delivery", "Received"];
-const stateVariables = ["pendingOrders", "processingOrders", "onDeliveryOrders", "receivedOrders"];
+const stateColors = ["badge bg-info", "badge bg-primary", "badge bg-warning", "badge bg-success", "badge bg-danger"];
+const stateTexts = ["Pending", "Processing", "On Delivery", "Received", "Cancelled"];
+const stateVariables = ["pendingOrders", "processingOrders", "onDeliveryOrders", "receivedOrders", "cancelledOrders"];
 const orderCheckBoxTemplate = '<label class="customcheckbox"><input type="checkbox" class="listCheckbox" /><span class="checkmark"></span></label>';
-const editButtontemplate = `<button type="button" class="btn btn-info editOrderButton" data-bs-toggle="modal" data-bs-target="#editOrderModal">Edit <i class="fas fa-edit"></i></button>
-                            <button type="button" class="btn btn-danger deleteOrderButton" >Delete<i class="fas fa-close" aria-hidden="true"></i></button>`;
+const editButtontemplate = `<button type="button" class="btn btn-info editOrderButton" data-bs-toggle="modal" data-bs-target="#editOrderModal">Edit <i class="fas fa-edit"></i></button>`;
 var selectedOrder;
 var updatedOrder;
+var unsubscribe;
+
+var showCancelled = false;
 
 (0,_index_js__WEBPACK_IMPORTED_MODULE_0__.checkCredential)();
 
@@ -56453,22 +56455,34 @@ function formDeserialize(form, data) {
     const entries = (new URLSearchParams(data)).entries();
     for(const [key, val] of entries) {
         //http://javascript-coder.com/javascript-form/javascript-form-value.phtml
-        const input = form.elements[key];
+		let newKey = key;
+		
+		if(newKey == "items"){
+			newKey = "total_price";
+		}
+        const input = form.elements[newKey];
         if(input == null){
             continue;
         }
         
         let proxyLabel = $(form).find("p[data-proxy='"+input.id+"']");
         if($(input).hasClass('dateClass')){
-            console.log(data[key]);
+            console.log(data[newKey]);
             if(proxyLabel != null){
-                proxyLabel.text((0,_index_js__WEBPACK_IMPORTED_MODULE_0__.firebaseTimeStampToDateString)(data[key]));
+                proxyLabel.text((0,_index_js__WEBPACK_IMPORTED_MODULE_0__.firebaseTimeStampToDateString)(data[newKey]));
             }
         }
 
+		console.log($(input));
         if($(input).hasClass('currency')){
+			console.log(data[key]);
+			let totalPrice = 0;
+			for(var i=0; i<data[key].length; i++){
+				totalPrice += parseFloat(data[key][i].price.replace('₱', ''));
+			}
             if(proxyLabel != null){
-                proxyLabel.text((0,_index_js__WEBPACK_IMPORTED_MODULE_0__.PESO)(val).format());
+				//console.log(data[newKey]);
+                proxyLabel.text((0,_index_js__WEBPACK_IMPORTED_MODULE_0__.PESO)(totalPrice).format());
             }
         }
 
@@ -56488,6 +56502,16 @@ function initializeOrderTable(){
     orderTable = $("#zero_config").DataTable({
         fixedHeader: true,
         initComplete: filterFunction,
+		dom: 'Bfrtip',
+        buttons: [
+            {
+                text: 'show/hide cancelled',
+                action: function ( e, dt, node, config ) {
+					showCancelled = !showCancelled;
+					attachOrderTableListener();
+                }
+            }
+        ],
         columnDefs: [
             {
                 orderable: false, targets: 0                
@@ -56510,9 +56534,20 @@ function initializeOrderTable(){
                     return `<span class="${stateColors[data]}">${stateTexts[data]}</span>`;
                 }
             },
-            { data: 'total_price',
+            { data: 'items',
                 render: (data, type)=>{
-                    return (0,_index_js__WEBPACK_IMPORTED_MODULE_0__.PESO)(data).format();
+					let totalPrice = 0;
+					if(data != undefined){
+						console.log(data);
+						for(var i=0; i<data.length; i++){
+							totalPrice += parseFloat(data[i].price.replace('₱', ''));
+						}
+					}
+					else{
+						console.log(`data is undefined : type==${type}`);
+					}
+					
+                    return (0,_index_js__WEBPACK_IMPORTED_MODULE_0__.PESO)(totalPrice).format();
                 }
             },
             { data: 'restaurantName' },
@@ -56520,25 +56555,33 @@ function initializeOrderTable(){
         ],
         createdRow: function( row, data, dataIndex ) {            
             row.id = data.id;
+			console.log(row);
         }
     });
 }
 
 function attachOrderTableListener(){
-    const q = (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_1__.query)((0,firebase_firestore__WEBPACK_IMPORTED_MODULE_1__.collection)(_index_js__WEBPACK_IMPORTED_MODULE_0__.database, "orders").withConverter(orderConverter)
-    /*, where("deleted", "!=", true)*/
-    );
+	orderTable.clear();
+	if(unsubscribe != null){
+		unsubscribe();
+	}
+	
+    var q = (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_1__.query)((0,firebase_firestore__WEBPACK_IMPORTED_MODULE_1__.collection)(_index_js__WEBPACK_IMPORTED_MODULE_0__.database, "orders").withConverter(orderConverter));
+	
+	
 
-    const unsubscribe = (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_1__.onSnapshot)(q, (snapshot) => {
+    unsubscribe = (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_1__.onSnapshot)(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
             let order = change.doc.data();
             if(order['state'] == undefined){
                 order['state'] = 0;
             }
-
-            orderTable.row.add(order).draw();
-            console.log(order);
+						
+			if((showCancelled == false && order['state'] != 4) || (showCancelled && order['state'] == 4)){
+				orderTable.row.add(order).draw();
+				console.log(order);
+			}
         }
         if (change.type === "modified") {
             console.log("Modified order: ", change.doc.data());
@@ -58402,7 +58445,7 @@ function setUserLogHandler(logCallback, options) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("d380cd8f22506ba1f96b")
+/******/ 		__webpack_require__.h = () => ("aefaa517afe8d06dbfee")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
